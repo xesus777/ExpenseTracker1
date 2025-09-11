@@ -111,7 +111,7 @@ namespace ExpenseTracker
                 switch (choice)
                 {
                     case "1":
-                        
+                        ShowData();
                         break;
                     case "2":
                         ShowStatistics();
@@ -135,7 +135,20 @@ namespace ExpenseTracker
             }
         }
 
-        
+        static void ShowData()
+        {
+            Console.WriteLine("\n=== Список расходов ===");
+            if (expenses.Count == 0)
+            {
+                Console.WriteLine("Нет данных о расходах.");
+                return;
+            }
+
+            for (int i = 0; i < expenses.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {expenses[i]}");
+            }
+        }
 
         static void ShowStatistics()
         {
@@ -193,7 +206,7 @@ namespace ExpenseTracker
             }
 
             Console.WriteLine("Сортировка завершена!");
-            
+            ShowData();
         }
 
         static void CurrencyConversion()
