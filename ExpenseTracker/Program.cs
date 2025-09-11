@@ -92,5 +92,205 @@ namespace ExpenseTracker
                 }
             }
         }
+
+        static void ShowMainMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("\n=== Главное меню ===");
+                Console.WriteLine("1. Вывод данных");
+                Console.WriteLine("2. Статистика (среднее, максимальное, минимальное, сумма)");
+                Console.WriteLine("3. Сортировка по цене (пузырьковая сортировка)");
+                Console.WriteLine("4. Конвертация валюты");
+                Console.WriteLine("5. Поиск по названию");
+                Console.WriteLine("6. Выход");
+
+                Console.Write("Выберите пункт меню (1-6): ");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        ShowData();
+                        break;
+                    case "2":
+                        
+                        break;
+                    case "3":
+                        BubbleSortByPrice();
+                        break;
+                    case "4":
+                        CurrencyConversion();
+                        break;
+                    case "5":
+                        SearchByName();
+                        break;
+                    case "6":
+                        Console.WriteLine("До свидания!");
+                        return;
+                    default:
+                        Console.WriteLine("Неверный выбор! Попробуйте снова.");
+                        break;
+                }
+            }
+        }
+
+        static void ShowData()
+        {
+            Console.WriteLine("\n=== Список расходов ===");
+            if (expenses.Count == 0)
+            {
+                Console.WriteLine("Нет данных о расходах.");
+                return;
+            }
+
+            for (int i = 0; i < expenses.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {expenses[i]}");
+            }
+        }
+
+        
+
+        static void BubbleSortByPrice()
+        {
+            if (expenses.Count == 0)
+            {
+                Console.WriteLine("Нет данных для сортировки.");
+                return;
+            }
+
+            Console.WriteLine("\nВыберите порядок сортировки:");
+            Console.WriteLine("1. По возрастанию");
+            Console.WriteLine("2. По убыванию");
+            Console.Write("Ваш выбор: ");
+
+            string sortChoice = Console.ReadLine();
+            bool ascending = sortChoice == "1";
+
+            // puzir
+            for (int i = 0; i < expenses.Count - 1; i++)
+            {
+                for (int j = 0; j < expenses.Count - i - 1; j++)
+                {
+                    bool shouldSwap = ascending ?
+                        expenses[j].Amount > expenses[j + 1].Amount :
+                        expenses[j].Amount < expenses[j + 1].Amount;
+
+                    if (shouldSwap)
+                    {
+                        var temp = expenses[j];
+                        expenses[j] = expenses[j + 1];
+                        expenses[j + 1] = temp;
+                    }
+                }
+            }
+
+            Console.WriteLine("Сортировка завершена!");
+            ShowData();
+        }
+
+        static void CurrencyConversion()
+        {
+            if (expenses.Count == 0)
+            {
+                Console.WriteLine("Нет данных для конвертации.");
+                return;
+            }
+
+            Console.WriteLine("\n=== Конвертация валюты ===");
+            Console.WriteLine("Доступные валюты:");
+            Console.WriteLine("1. Доллар США (USD)");
+            Console.WriteLine("2. Евро (EUR)");
+            Console.WriteLine("3. Фунт стерлингов (GBP)");
+            Console.WriteLine("4. Произвольный курс");
+
+            Console.Write("Выберите валюту (1-4): ");
+            string currencyChoice = Console.ReadLine();
+
+            decimal exchangeRate = 0;
+            string currencySymbol = "";
+
+            switch (currencyChoice)
+            {
+                case "1":
+                    exchangeRate = GetExchangeRate("доллара");
+                    currencySymbol = "USD";
+                    break;
+                case "2":
+                    exchangeRate = GetExchangeRate("евро");
+                    currencySymbol = "EUR";
+                    break;
+                case "3":
+                    exchangeRate = GetExchangeRate("фунта стерлингов");
+                    currencySymbol = "GBP";
+                    break;
+                case "4":
+                    exchangeRate = GetExchangeRate("валюты");
+                    Console.Write("Введите символ валюты: ");
+                    currencySymbol = Console.ReadLine();
+                    break;
+                default:
+                    Console.WriteLine("Неверный выбор.");
+                    return;
+            }
+
+            if (exchangeRate <= 0)
+            {
+                Console.WriteLine("Неверный курс валюты.");
+                return;
+            }
+
+            Console.WriteLine($"\n=== Расходы в {currencySymbol} (курс: {exchangeRate:F2}) ===");
+            foreach (var expense in expenses)
+            {
+                decimal convertedAmount = expense.Amount / exchangeRate;
+                Console.WriteLine($"{expense.Name}; {convertedAmount:F2} {currencySymbol}");
+            }
+
+            decimal totalRub = expenses.Sum(e => e.Amount);
+            decimal totalConverted = totalRub / exchangeRate;
+            Console.WriteLine($"\nОбщая сумма: {totalConverted:F2} {currencySymbol} ({totalRub:F2} руб.)");
+        }
+
+        static decimal GetExchangeRate(string currencyName)
+        {
+            decimal rate;
+            while (true)
+            {
+                Console.Write($"Введите курс {currencyName} к рублю: ");
+                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Any, CultureInfo.InvariantCulture, out rate) && rate > 0)
+                {
+                    return rate;
+                }
+                Console.WriteLine("Ошибка! Введите корректный курс.");
+            }
+        }
+
+        static void SearchByName()
+        {
+            if (expenses.Count == 0)
+            {
+                Console.WriteLine("Нет данных для поиска.");
+                return;
+            }
+
+            Console.Write("\nВведите название для поиска: ");
+            string searchTerm = Console.ReadLine().ToLower();
+
+            var results = expenses.Where(e => e.Name.ToLower().Contains(searchTerm)).ToList();
+
+            if (results.Count == 0)
+            {
+                Console.WriteLine("Совпадений не найдено.");
+                return;
+            }
+
+            Console.WriteLine($"\n=== Результаты поиска ({results.Count} найдено) ===");
+            foreach (var result in results)
+            {
+                Console.WriteLine(result);
+            }
+        }
     }
 }
