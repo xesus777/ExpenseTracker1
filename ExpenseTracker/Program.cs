@@ -111,10 +111,10 @@ namespace ExpenseTracker
                 switch (choice)
                 {
                     case "1":
-                        ShowData();
+                        
                         break;
                     case "2":
-                        
+                        ShowStatistics();
                         break;
                     case "3":
                         BubbleSortByPrice();
@@ -135,22 +135,28 @@ namespace ExpenseTracker
             }
         }
 
-        static void ShowData()
+        
+
+        static void ShowStatistics()
         {
-            Console.WriteLine("\n=== Список расходов ===");
             if (expenses.Count == 0)
             {
-                Console.WriteLine("Нет данных о расходах.");
+                Console.WriteLine("Нет данных для статистики.");
                 return;
             }
 
-            for (int i = 0; i < expenses.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {expenses[i]}");
-            }
-        }
+            decimal total = expenses.Sum(e => e.Amount);
+            decimal average = expenses.Average(e => e.Amount);
+            decimal max = expenses.Max(e => e.Amount);
+            decimal min = expenses.Min(e => e.Amount);
 
-        
+            Console.WriteLine("\n=== Статистика расходов ===");
+            Console.WriteLine($"Общая сумма: {total:F2} руб.");
+            Console.WriteLine($"Средняя сумма: {average:F2} руб.");
+            Console.WriteLine($"Максимальная сумма: {max:F2} руб.");
+            Console.WriteLine($"Минимальная сумма: {min:F2} руб.");
+            Console.WriteLine($"Количество операций: {expenses.Count}");
+        }
 
         static void BubbleSortByPrice()
         {
@@ -187,7 +193,7 @@ namespace ExpenseTracker
             }
 
             Console.WriteLine("Сортировка завершена!");
-            ShowData();
+            
         }
 
         static void CurrencyConversion()
