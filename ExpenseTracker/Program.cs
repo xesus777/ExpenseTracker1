@@ -310,5 +310,224 @@ namespace StoreManagement
             }
         }
     }
+    class Program
+    {
+        static Store store = new Store();
 
-    
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=== СИСТЕМА УПРАВЛЕНИЯ МАГАЗИНОМ ===");
+
+            while (true)
+            {
+                ShowMainMenu();
+                var choice = GetUserChoice(1, 10);
+
+                switch (choice)
+                {
+                    case 1:
+                        AddProductMenu();
+                        break;
+                    case 2:
+                        RemoveProductMenu();
+                        break;
+                    case 3:
+                        OrderSupplyMenu();
+                        break;
+                    case 4:
+                        SellProductMenu();
+                        break;
+                    case 5:
+                        SearchMenu();
+                        break;
+                    case 6:
+                        store.DisplayAllProducts();
+                        break;
+                    case 7:
+                        store.ShowSalesHistory();
+                        break;
+                    case 8:
+                        store.UndoLastSale();
+                        break;
+                    case 9:
+                        store.ShowSalesReport();
+                        break;
+                    case 10:
+                        Console.WriteLine("Выход из системы...");
+                        return;
+                }
+
+                Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        static void ShowMainMenu()
+        {
+            Console.WriteLine("\nГЛАВНОЕ МЕНЮ:");
+            Console.WriteLine("1. Добавить товар");
+            Console.WriteLine("2. Удалить товар");
+            Console.WriteLine("3. Заказать поставку");
+            Console.WriteLine("4. Продать товар");
+            Console.WriteLine("5. Поиск товаров");
+            Console.WriteLine("6. Показать все товары");
+            Console.WriteLine("7. История продаж");
+            Console.WriteLine("8. Отменить последнюю продажу");
+            Console.WriteLine("9. Отчет о продажах");
+            Console.WriteLine("10. Выход");
+            Console.Write("Выберите действие (1-10): ");
+        }
+
+        static int GetUserChoice(int min, int max)
+        {
+            while (true)
+            {
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= min && choice <= max)
+                {
+                    return choice;
+                }
+                Console.Write($"Пожалуйста, введите число от {min} до {max}: ");
+            }
+        }
+
+        static void AddProductMenu()
+        {
+            Console.WriteLine("\nДОБАВЛЕНИЕ ТОВАРА:");
+
+            try
+            {
+                Console.Write("Введите название товара: ");
+                string name = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    Console.WriteLine("Название не может быть пустым!");
+                    return;
+                }
+
+                Console.Write("Введите цену: ");
+                if (!decimal.TryParse(Console.ReadLine(), out decimal price) || price < 0)
+                {
+                    Console.WriteLine("Неверная цена!");
+                    return;
+                }
+
+                Console.Write("Введите количество: ");
+                if (!int.TryParse(Console.ReadLine(), out int quantity) || quantity < 0)
+                {
+                    Console.WriteLine("Неверное количество!");
+                    return;
+                }
+
+                Console.WriteLine("Выберите категорию:");
+                var categories = Enum.GetValues(typeof(ProductCategory));
+                for (int i = 0; i < categories.Length; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {categories.GetValue(i)}");
+                }
+
+                Console.Write("Введите номер категории: ");
+                if (!int.TryParse(Console.ReadLine(), out int categoryIndex) ||
+                    categoryIndex < 1 || categoryIndex > categories.Length)
+                {
+                    Console.WriteLine("Неверный номер категории!");
+                    return;
+                }
+
+                ProductCategory category = (ProductCategory)(categoryIndex - 1);
+                Product product = new Product(name, price, quantity, category);
+                store.AddProduct(product);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
+
+        static void RemoveProductMenu()
+        {
+            Console.WriteLine("\nУДАЛЕНИЕ ТОВАРА:");
+            Console.Write("Введите код товара: ");
+            string code = Console.ReadLine();
+            store.RemoveProduct(code);
+        }
+        static void OrderSupplyMenu()
+        {
+            Console.WriteLine("\nЗАКАЗ ПОСТАВКИ:");
+            Console.Write("Введите код товара: ");
+            string code = Console.ReadLine();
+
+            Console.Write("Введите количество для поставки: ");
+            if (!int.TryParse(Console.ReadLine(), out int quantity) || quantity <= 0)
+            {
+                Console.WriteLine("Неверное количество!");
+                return;
+            }
+
+            store.OrderSupply(code, quantity);
+        }
+
+        static void SellProductMenu()
+        {
+            Console.WriteLine("\nПРОДАЖА ТОВАРА:");
+            Console.Write("Введите код товара: ");
+            string code = Console.ReadLine();
+
+            Console.Write("Введите количество для продажи: ");
+            if (!int.TryParse(Console.ReadLine(), out int quantity) || quantity <= 0)
+            {
+                Console.WriteLine("Неверное количество!");
+                return;
+            }
+
+            store.SellProduct(code, quantity);
+        }
+
+        static void SearchMenu()
+        {
+            Console.WriteLine("\nПОИСК ТОВАРОВ:");
+            Console.WriteLine("1. По коду");
+            Console.WriteLine("2. По названию");
+            Console.WriteLine("3. По категории");
+            Console.Write("Выберите тип поиска (1-3): ");
+
+            var choice = GetUserChoice(1, 3);
+
+            switch (choice)
+            {
+                case 1:
+                    Console.Write("Введите код товара: ");
+                    string code = Console.ReadLine();
+                    store.SearchByCode(code);
+                    break;
+                case 2:
+                    Console.Write("Введите название товара: ");
+                    string name = Console.ReadLine();
+                    store.SearchByName(name);
+                    break;
+                case 3:
+                    Console.WriteLine("Выберите категорию:");
+                    var categories = Enum.GetValues(typeof(ProductCategory));
+                    for (int i = 0; i < categories.Length; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {categories.GetValue(i)}");
+                    }
+                    Console.Write("Введите номер категории: ");
+                    if (int.TryParse(Console.ReadLine(), out int categoryIndex) &&
+                        categoryIndex >= 1 && categoryIndex <= categories.Length)
+                    {
+                        ProductCategory category = (ProductCategory)(categoryIndex - 1);
+                        store.SearchByCategory(category);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Неверный номер категории!");
+                    }
+                    break;
+            }
+        }
+    }
+}
+
+
