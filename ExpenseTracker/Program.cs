@@ -48,5 +48,28 @@ namespace StoreManagement
                    $"В наличии: {(InStock ? "Да" : "Нет")}, Категория: {Category}";
         }
     }
+    public class Sale
+    {
+        public string ProductCode { get; set; }
+        public string ProductName { get; set; }
+        public int Quantity { get; set; }
+        public decimal TotalAmount { get; set; }
+        public DateTime SaleDate { get; set; }
+
+        public Sale(string productCode, string productName, int quantity, decimal totalAmount)
+        {
+            ProductCode = productCode;
+            ProductName = productName;
+            Quantity = quantity;
+            TotalAmount = totalAmount;
+            SaleDate = DateTime.Now;
+        }
+
+        public override string ToString()
+        {
+            return $"Дата: {SaleDate:yyyy-MM-dd HH:mm}, Код: {ProductCode}, Товар: {ProductName}, " +
+                   $"Количество: {Quantity}, Сумма: {TotalAmount:C}";
+        }
+    }
 
     
