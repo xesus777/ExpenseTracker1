@@ -169,4 +169,21 @@ namespace TextAnalyzer
             return statisticsHistory;
         }
     }
-    
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            
+        }
+
+        static void DisplayMenu()
+        {
+            Console.WriteLine("\n=== ГЛАВНОЕ МЕНЮ ===");
+            Console.WriteLine("1. Анализ нового текста");
+            Console.WriteLine("2. Просмотр истории статистики");
+            Console.WriteLine("3. Выход");
+            Console.Write("Выберите опцию (1-3): ");
+        }
+        
+}
