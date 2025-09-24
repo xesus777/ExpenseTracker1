@@ -185,5 +185,28 @@ namespace TextAnalyzer
             Console.WriteLine("3. Выход");
             Console.Write("Выберите опцию (1-3): ");
         }
+        static void AnalyzeNewText(TextAnalyzer analyzer)
+        {
+            Console.WriteLine("\n--- АНАЛИЗ НОВОГО ТЕКСТА ---");
+
+            try
+            {
+                string text = analyzer.GetTextFromUser();
+                Console.WriteLine("\nВыполняется анализ...");
+
+                var statistics = analyzer.AnalyzeText(text);
+
+                Console.WriteLine("✓ Анализ завершен успешно!");
+                statistics.DisplayStatistics();
+
+                Console.WriteLine("Статистика сохранена в историю.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при анализе текста: {ex.Message}");
+            }
+        }
+
         
+    }
 }
