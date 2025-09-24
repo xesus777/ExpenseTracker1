@@ -113,5 +113,13 @@ namespace TextAnalyzer
             }
         }
         
+
+        private int CountSentences(string text)
+        {
+            return text.Split(sentenceSeparators, StringSplitOptions.RemoveEmptyEntries)
+                       .Count(s => s.Trim().Length > 0);
+        }
+
+        
     }
     
