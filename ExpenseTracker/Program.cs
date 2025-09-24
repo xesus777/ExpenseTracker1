@@ -174,7 +174,34 @@ namespace TextAnalyzer
     {
         static void Main(string[] args)
         {
-            
+            TextAnalyzer analyzer = new TextAnalyzer();
+            bool continueWorking = true;
+
+            Console.WriteLine("=== АНАЛИЗАТОР ТЕКСТА ===");
+            Console.WriteLine("Программа для анализа текстовых данных\n");
+
+            while (continueWorking)
+            {
+                DisplayMenu();
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        AnalyzeNewText(analyzer);
+                        break;
+                    case "2":
+                        ShowStatisticsHistory(analyzer);
+                        break;
+                    case "3":
+                        continueWorking = false;
+                        Console.WriteLine("Спасибо за использование программы! До свидания!");
+                        break;
+                    default:
+                        Console.WriteLine("Неверный выбор. Попробуйте еще раз.");
+                        break;
+                }
+            }
         }
 
         static void DisplayMenu()
