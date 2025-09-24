@@ -112,7 +112,23 @@ namespace TextAnalyzer
                 }
             }
         }
-        
+        private void CalculateLetterFrequency(string text, TextStatistics statistics)
+        {
+            foreach (char c in text.ToLower())
+            {
+                if (char.IsLetter(c))
+                {
+                    if (statistics.LetterFrequency.ContainsKey(c))
+                    {
+                        statistics.LetterFrequency[c]++;
+                    }
+                    else
+                    {
+                        statistics.LetterFrequency[c] = 1;
+                    }
+                }
+            }
+        }
 
         private int CountSentences(string text)
         {
@@ -120,6 +136,9 @@ namespace TextAnalyzer
                        .Count(s => s.Trim().Length > 0);
         }
 
-        
+        public List<TextStatistics> GetStatisticsHistory()
+        {
+            return statisticsHistory;
+        }
     }
     
