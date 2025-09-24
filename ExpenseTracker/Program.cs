@@ -207,6 +207,36 @@ namespace TextAnalyzer
             }
         }
 
-        
+        static void ShowStatisticsHistory(TextAnalyzer analyzer)
+        {
+            var history = analyzer.GetStatisticsHistory();
+
+            if (history.Count == 0)
+            {
+                Console.WriteLine("\nИстория статистики пуста.");
+                return;
+            }
+
+            Console.WriteLine($"\n=== ИСТОРИЯ СТАТИСТИКИ ({history.Count} записей) ===");
+
+            Console.WriteLine("\nКраткий обзор:");
+            for (int i = 0; i < history.Count; i++)
+            {
+                history[i].DisplayCompactStatistics(i + 1);
+            }
+
+            Console.Write("\nВведите номер записи для детального просмотра (0 - вернуться): ");
+            if (int.TryParse(Console.ReadLine(), out int choice))
+            {
+                if (choice > 0 && choice <= history.Count)
+                {
+                    history[choice - 1].DisplayStatistics();
+                }
+                else if (choice != 0)
+                {
+                    Console.WriteLine("Неверный номер записи.");
+                }
+            }
+        }
     }
 }
