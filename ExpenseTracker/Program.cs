@@ -91,5 +91,27 @@ namespace TextAnalyzer
         }
 
         
+
+        private void CountLetters(string text, TextStatistics statistics)
+        {
+            statistics.VowelCount = 0;
+            statistics.ConsonantCount = 0;
+
+            foreach (char c in text.ToLower())
+            {
+                if (char.IsLetter(c))
+                {
+                    if (vowels.Contains(c))
+                    {
+                        statistics.VowelCount++;
+                    }
+                    else
+                    {
+                        statistics.ConsonantCount++;
+                    }
+                }
+            }
+        }
+        
     }
     
