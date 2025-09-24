@@ -90,7 +90,35 @@ namespace TextAnalyzer
             return text.Trim();
         }
 
-        
+        public TextStatistics AnalyzeText(string text)
+        {
+            var statistics = new TextStatistics();
+            statistics.AnalysisDate = DateTime.Now;
+            statistics.TextPreview = text.Length > 50 ? text.Substring(0, 50) : text;
+
+            var words = SplitTextIntoWords(text);
+            statistics.TotalWords = words.Length;
+            if (words.Length > 0)
+            {
+                statistics.ShortestWord = words.OrderBy(word => word.Length).First();
+                statistics.LongestWord = words.OrderByDescending(word => word.Length).First();
+                CountLetters(text, statistics);
+                CalculateLetterFrequency(text, statistics);
+            }
+
+            statistics.TotalSentences = CountSentences(text);
+            statisticsHistory.Add(statistics);
+
+            return statistics;
+        }
+
+        private string[] SplitTextIntoWords(string text)
+        {
+            char[] separators = { ' ', ',', '.', '!', '?', ';', ':', '\t', '\n', '\r', '(', ')', '[', ']', '{', '}' };
+            return text.Split(separators, StringSplitOptions.RemoveEmptyEntries)
+                       .Where(word => word.Length > 0 && char.IsLetterOrDigit(word[0]))
+                       .ToArray();
+        }
 
         private void CountLetters(string text, TextStatistics statistics)
         {
