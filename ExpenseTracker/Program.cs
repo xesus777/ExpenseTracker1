@@ -190,5 +190,79 @@ namespace LibraryManagement
     }
 
 
+    public class Menu
+    {
+        private Library library;
+
+        public Menu()
+        {
+            library = new Library();
+            library.AddTestData();
+        }
+
+        public void DisplayMainMenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("=== СИСТЕМА УЧЁТА БИБЛИОТЕКИ ===");
+                Console.WriteLine("1. Показать все книги");
+                Console.WriteLine("2. Добавить книгу");
+                Console.WriteLine("3. Удалить книгу");
+                Console.WriteLine("4. Найти книги");
+                Console.WriteLine("5. Сортировать книги");
+                Console.WriteLine("6. Самая дорогая/дешёвая книга");
+                Console.WriteLine("7. Группировка по авторам");
+                Console.WriteLine("0. Выход");
+                Console.Write("Выберите действие: ");
+
+                var choice = Console.ReadLine();
+                switch (choice)
+                {
+                    case "1":
+                        DisplayAllBooks();
+                        break;
+                    case "2":
+                        AddBookMenu();
+                        break;
+                    case "3":
+                        RemoveBookMenu();
+                        break;
+                    case "4":
+                        FindBooksMenu();
+                        break;
+                    case "5":
+                        SortBooksMenu();
+                        break;
+                    case "6":
+                        ShowPriceExtremesMenu();
+                        break;
+                    case "7":
+                        ShowAuthorsGroupMenu();
+                        break;
+                    case "0":
+                        Console.WriteLine("До свидания!");
+                        return;
+                    default:
+                        Console.WriteLine("Неверный выбор. Нажмите любую клавишу для продолжения...");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+
+        private void DisplayAllBooks()
+        {
+            Console.Clear();
+            Console.WriteLine("=== ВСЕ КНИГИ В БИБЛИОТЕКЕ ===");
+            library.DisplayAllBooks();
+            WaitForUser();
+        }
+
+        
+    }
+
+
+
     
 }
