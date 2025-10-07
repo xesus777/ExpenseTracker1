@@ -136,6 +136,13 @@ namespace LibraryManagement
         }
 
         
+        public Dictionary<string, int> GroupBooksByAuthor()
+        {
+            return books.GroupBy(b => b.Author)
+                       .ToDictionary(g => g.Key, g => g.Count());
+        }
+
+        
         
     }
 
