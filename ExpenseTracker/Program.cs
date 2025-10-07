@@ -76,6 +76,23 @@ namespace LibraryManagement
             Console.WriteLine($"Книга успешно добавлена с ID: {book.Id}");
         }
 
+        public bool RemoveBook(int id)
+        {
+            var book = books.FirstOrDefault(b => b.Id == id);
+            if (book != null)
+            {
+                books.Remove(book);
+                Console.WriteLine($"Книга с ID {id} успешно удалена.");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"Книга с ID {id} не найдена.");
+                return false;
+            }
+        }
+
+        
         
     }
 
