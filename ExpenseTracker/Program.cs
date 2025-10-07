@@ -39,30 +39,46 @@ namespace LibraryManagement
         
         public void DisplayInfo()
         {
-            
+            Console.WriteLine($"ID: {Id}");
+            Console.WriteLine($"Название: {Title}");
+            Console.WriteLine($"Автор: {Author}");
+            Console.WriteLine($"Жанр: {Genre}");
+            Console.WriteLine($"Год издания: {Year}");
+            Console.WriteLine($"Цена: {Price:C}");
+            Console.WriteLine(new string('-', 40));
         }
     }
 
+   
     public class Library
     {
         private List<Book> books;
         private int nextId;
 
-        
         public Library()
         {
             books = new List<Book>();
             nextId = 1;
         }
 
+        
+        public List<Book> GetAllBooks()
+        {
+            return books;
+        }
+
+        
         public void AddBook(string title, string author, Genre genre, int year, decimal price)
         {
-            
+            var book = new Book(nextId, title, author, genre, year, price);
+            books.Add(book);
+            nextId++;
+            Console.WriteLine($"Книга успешно добавлена с ID: {book.Id}");
         }
 
         
     }
 
-   
+
     
 }
