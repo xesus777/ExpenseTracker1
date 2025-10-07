@@ -109,6 +109,22 @@ namespace LibraryManagement
         }
 
         
+        public List<Book> SortBooksByTitle()
+        {
+            return books.OrderBy(b => b.Title).ToList();
+        }
+
+        public List<Book> SortBooksByYear()
+        {
+            return books.OrderBy(b => b.Year).ToList();
+        }
+
+        public List<Book> SortBooksByYearDescending()
+        {
+            return books.OrderByDescending(b => b.Year).ToList();
+        }
+
+        
         
     }
 
