@@ -143,6 +143,18 @@ namespace LibraryManagement
         }
 
         
+        public void AddTestData()
+        {
+            AddBook("Война и мир", "Лев Толстой", Genre.Fiction, 1869, 1200.50m);
+            AddBook("Преступление и наказание", "Фёдор Достоевский", Genre.Fiction, 1866, 950.75m);
+            AddBook("1984", "Джордж Оруэлл", Genre.Fiction, 1949, 800.00m);
+            AddBook("Краткая история времени", "Стивен Хокинг", Genre.Science, 1988, 1500.00m);
+            AddBook("Сто лет одиночества", "Габриэль Гарсиа Маркес", Genre.Fantasy, 1967, 1100.25m);
+            AddBook("Мастер и Маргарита", "Михаил Булгаков", Genre.Fantasy, 1967, 1300.00m);
+            AddBook("Анна Каренина", "Лев Толстой", Genre.Fiction, 1877, 1050.00m);
+        }
+
+        
         
     }
 
