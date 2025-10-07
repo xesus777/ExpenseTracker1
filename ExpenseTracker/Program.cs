@@ -125,6 +125,17 @@ namespace LibraryManagement
         }
 
         
+        public Book GetMostExpensiveBook()
+        {
+            return books.OrderByDescending(b => b.Price).FirstOrDefault();
+        }
+
+        public Book GetCheapestBook()
+        {
+            return books.OrderBy(b => b.Price).FirstOrDefault();
+        }
+
+        
         
     }
 
