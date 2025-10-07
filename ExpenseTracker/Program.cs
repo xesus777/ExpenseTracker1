@@ -98,6 +98,17 @@ namespace LibraryManagement
             return books.Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
+        public List<Book> FindBooksByAuthor(string author)
+        {
+            return books.Where(b => b.Author.Contains(author, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        public List<Book> FindBooksByGenre(Genre genre)
+        {
+            return books.Where(b => b.Genre == genre).ToList();
+        }
+
+        
         
     }
 
