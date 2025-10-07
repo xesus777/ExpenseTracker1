@@ -155,7 +155,38 @@ namespace LibraryManagement
         }
 
         
+        public void DisplayAllBooks()
+        {
+            if (!books.Any())
+            {
+                Console.WriteLine("В библиотеке нет книг.");
+                return;
+            }
+
+            Console.WriteLine($"\nВсего книг в библиотеке: {books.Count}");
+            Console.WriteLine(new string('=', 50));
+            foreach (var book in books)
+            {
+                book.DisplayInfo();
+            }
+        }
+
         
+        public void DisplayBooks(List<Book> booksToDisplay)
+        {
+            if (!booksToDisplay.Any())
+            {
+                Console.WriteLine("Книги не найдены.");
+                return;
+            }
+
+            Console.WriteLine($"\nНайдено книг: {booksToDisplay.Count}");
+            Console.WriteLine(new string('=', 50));
+            foreach (var book in booksToDisplay)
+            {
+                book.DisplayInfo();
+            }
+        }
     }
 
 
