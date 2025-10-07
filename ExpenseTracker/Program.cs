@@ -43,5 +43,15 @@ namespace LibraryManagement
         }
     }
 
+    public class Library
+    {
+        private List<Book> books;
+        private int nextId;
+
+        
+        
+    }
+
+   
     
 }
