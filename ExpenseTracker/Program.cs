@@ -259,6 +259,263 @@ namespace LibraryManagement
             WaitForUser();
         }
 
+        public void AddBookMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("=== ДОБАВЛЕНИЕ НОВОЙ КНИГИ ===");
+
+            string title = GetValidatedStringInput("Введите название книги: ");
+            string author = GetValidatedStringInput("Введите автора книги: ");
+            Genre genre = GetValidatedGenreInput("Введите жанр книги: ");
+            int year = GetValidatedYearInput("Введите год издания: ");
+            decimal price = GetValidatedPriceInput("Введите цену книги: ");
+
+            library.AddBook(title, author, genre, year, price);
+            WaitForUser();
+        }
+
+        public void RemoveBookMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("=== УДАЛЕНИЕ КНИГИ ===");
+            library.DisplayAllBooks();
+
+            if (library.GetAllBooks().Any())
+            {
+                int id = GetValidatedIdInput("Введите ID книги для удаления: ");
+                library.RemoveBook(id);
+            }
+            WaitForUser();
+        }
+
+        public void FindBooksMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("=== ПОИСК КНИГ ===");
+            Console.WriteLine("1. Поиск по названию");
+            Console.WriteLine("2. Поиск по автору");
+            Console.WriteLine("3. Поиск по жанру");
+            Console.Write("Выберите тип поиска: ");
+
+            var choice = Console.ReadLine();
+            List<Book> foundBooks = new List<Book>();
+
+            switch (choice)
+            {
+                case "1":
+                    string title = GetValidatedStringInput("Введите название для поиска: ");
+                    foundBooks = library.FindBooksByTitle(title);
+                    break;
+                case "2":
+                    string author = GetValidatedStringInput("Введите автора для поиска: ");
+                    foundBooks = library.FindBooksByAuthor(author);
+                    break;
+                case "3":
+                    Genre genre = GetValidatedGenreInput("Введите жанр для поиска: ");
+                    foundBooks = library.FindBooksByGenre(genre);
+                    break;
+                default:
+                    Console.WriteLine("Неверный выбор.");
+                    WaitForUser();
+                    return;
+            }
+
+            Console.WriteLine("\n=== РЕЗУЛЬТАТЫ ПОИСКА ===");
+            library.DisplayBooks(foundBooks);
+            WaitForUser();
+        }
+
+        public void SortBooksMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("=== СОРТИРОВКА КНИГ ===");
+            Console.WriteLine("1. Сортировка по названию (А-Я)");
+            Console.WriteLine("2. Сортировка по году издания (по возрастанию)");
+            Console.WriteLine("3. Сортировка по году издания (по убыванию)");
+            Console.Write("Выберите тип сортировки: ");
+
+            var choice = Console.ReadLine();
+            List<Book> sortedBooks = new List<Book>();
+
+            switch (choice)
+            {
+                case "1":
+                    sortedBooks = library.SortBooksByTitle();
+                    Console.WriteLine("\n=== КНИГИ, ОТСОРТИРОВАННЫЕ ПО НАЗВАНИЮ ===");
+                    break;
+                case "2":
+                    sortedBooks = library.SortBooksByYear();
+                    Console.WriteLine("\n=== КНИГИ, ОТСОРТИРОВАННЫЕ ПО ГОДУ (ПО ВОЗРАСТАНИЮ) ===");
+                    break;
+                case "3":
+                    sortedBooks = library.SortBooksByYearDescending();
+                    Console.WriteLine("\n=== КНИГИ, ОТСОРТИРОВАННЫЕ ПО ГОДУ (ПО УБЫВАНИЮ) ===");
+                    break;
+                default:
+                    Console.WriteLine("Неверный выбор.");
+                    WaitForUser();
+                    return;
+            }
+
+            library.DisplayBooks(sortedBooks);
+            WaitForUser();
+        }
+
+        public void ShowPriceExtremesMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("=== САМАЯ ДОРОГАЯ И САМАЯ ДЕШЁВАЯ КНИГИ ===");
+
+            var mostExpensive = library.GetMostExpensiveBook();
+            var cheapest = library.GetCheapestBook();
+
+            if (mostExpensive != null && cheapest != null)
+            {
+                Console.WriteLine("\n=== САМАЯ ДОРОГАЯ КНИГА ===");
+                mostExpensive.DisplayInfo();
+
+                Console.WriteLine("\n=== САМАЯ ДЕШЁВАЯ КНИГА ===");
+                cheapest.DisplayInfo();
+            }
+            else
+            {
+                Console.WriteLine("В библиотеке нет книг.");
+            }
+
+            WaitForUser();
+        }
+
+        public void ShowAuthorsGroupMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("=== ГРУППИРОВКА КНИГ ПО АВТОРАМ ===");
+
+            var authorsGroup = library.GroupBooksByAuthor();
+
+            if (authorsGroup.Any())
+            {
+                Console.WriteLine("\nКоличество книг по авторам:");
+                Console.WriteLine(new string('-', 30));
+                foreach (var author in authorsGroup.OrderByDescending(a => a.Value))
+                {
+                    Console.WriteLine($"{author.Key}: {author.Value} книг(и)");
+                }
+            }
+            else
+            {
+                Console.WriteLine("В библиотеке нет книг.");
+            }
+
+            WaitForUser();
+        }
+
+        
+        private string GetValidatedStringInput(string prompt)
+        {
+            string input;
+            do
+            {
+                Console.Write(prompt);
+                input = Console.ReadLine()?.Trim();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    Console.WriteLine("Ошибка: поле не может быть пустым. Попробуйте снова.");
+                }
+            } while (string.IsNullOrWhiteSpace(input));
+
+            return input;
+        }
+
+        private int GetValidatedYearInput(string prompt)
+        {
+            int year;
+            while (true)
+            {
+                Console.Write(prompt);
+                if (int.TryParse(Console.ReadLine(), out year))
+                {
+                    int currentYear = DateTime.Now.Year;
+                    if (year >= 1000 && year <= currentYear)
+                    {
+                        return year;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Ошибка: год должен быть между 1000 и {currentYear}. Попробуйте снова.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка: введите корректный год. Попробуйте снова.");
+                }
+            }
+        }
+
+        private decimal GetValidatedPriceInput(string prompt)
+        {
+            decimal price;
+            while (true)
+            {
+                Console.Write(prompt);
+                if (decimal.TryParse(Console.ReadLine(), out price))
+                {
+                    if (price >= 0)
+                    {
+                        return price;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Ошибка: цена не может быть отрицательной. Попробуйте снова.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка: введите корректную цену. Попробуйте снова.");
+                }
+            }
+        }
+
+        private Genre GetValidatedGenreInput(string prompt)
+        {
+            Console.WriteLine(prompt);
+            Console.WriteLine("Доступные жанры:");
+            var genres = Enum.GetValues(typeof(Genre));
+            for (int i = 0; i < genres.Length; i++)
+            {
+                Console.WriteLine($"{i + 1}. {genres.GetValue(i)}");
+            }
+
+            while (true)
+            {
+                Console.Write("Выберите номер жанра: ");
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= genres.Length)
+                {
+                    return (Genre)(choice - 1);
+                }
+                else
+                {
+                    Console.WriteLine($"Ошибка: введите число от 1 до {genres.Length}. Попробуйте снова.");
+                }
+            }
+        }
+
+        private int GetValidatedIdInput(string prompt)
+        {
+            int id;
+            while (true)
+            {
+                Console.Write(prompt);
+                if (int.TryParse(Console.ReadLine(), out id) && id > 0)
+                {
+                    return id;
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка: введите корректный положительный ID. Попробуйте снова.");
+                }
+            }
+        }
+
         
     }
 
