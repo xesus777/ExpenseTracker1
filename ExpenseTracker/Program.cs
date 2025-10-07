@@ -55,21 +55,14 @@ namespace LibraryManagement
             nextId = 1;
         }
 
+        public void AddBook(string title, string author, Genre genre, int year, decimal price)
+        {
+            
+        }
+
         
     }
 
    
-    public class Menu
-    {
-        
-
-        public Menu()
-        {
-            
-        }
-        
-    }
-
-    
     
 }
