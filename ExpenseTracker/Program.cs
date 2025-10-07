@@ -93,6 +93,11 @@ namespace LibraryManagement
         }
 
         
+        public List<Book> FindBooksByTitle(string title)
+        {
+            return books.Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
         
     }
 
