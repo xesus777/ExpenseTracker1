@@ -516,7 +516,11 @@ namespace LibraryManagement
             }
         }
 
-        
+        private void WaitForUser()
+        {
+            Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+            Console.ReadKey();
+        }
     }
 
 
