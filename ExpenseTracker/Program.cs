@@ -49,9 +49,27 @@ namespace LibraryManagement
         private int nextId;
 
         
+        public Library()
+        {
+            books = new List<Book>();
+            nextId = 1;
+        }
+
         
     }
 
    
+    public class Menu
+    {
+        
+
+        public Menu()
+        {
+            
+        }
+        
+    }
+
+    
     
 }
