@@ -309,21 +309,162 @@ namespace UniversityManagementSystem
     
     public class Course
     {
-        
+        private static int nextCourseId = 1;
+        private string courseName;
+        private string description;
+        private int maxStudents;
+
+        public int CourseId { get; private set; }
+        public string CourseName
+        {
+            get => courseName;
+            private set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Название курса не может быть пустым");
+                courseName = value;
+            }
+        }
+
+        public string Description
+        {
+            get => description;
+            private set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Описание курса не может быть пустым");
+                description = value;
+            }
+        }
+
+        public Teacher Instructor { get; set; }
+        public List<Student> EnrolledStudents { get; private set; }
+        public int MaxStudents
+        {
+            get => maxStudents;
+            private set
+            {
+                if (value <= 0)
+                    throw new ArgumentException("Максимальное количество студентов должно быть положительным");
+                maxStudents = value;
+            }
+        }
+
+        public Course(string courseName, string description, int maxStudents)
+        {
+            CourseId = nextCourseId++;
+            CourseName = courseName;
+            Description = description;
+            MaxStudents = maxStudents;
+            EnrolledStudents = new List<Student>();
+            Instructor = null;
+        }
+
+        public void DisplayCourseInfo()
+        {
+            Console.WriteLine($"Курс ID: {CourseId}");
+            Console.WriteLine($"Название: {CourseName}");
+            Console.WriteLine($"Описание: {Description}");
+            Console.WriteLine($"Преподаватель: {Instructor?.Name ?? "Не назначен"}");
+            Console.WriteLine($"Студентов: {EnrolledStudents.Count}/{MaxStudents}");
+            Console.WriteLine($"Заполненность: {(double)EnrolledStudents.Count / MaxStudents * 100:F1}%");
+        }
+
+        public bool AddStudent(Student student)
+        {
+            if (student == null)
+                throw new ArgumentNullException(nameof(student), "Студент не может быть null");
+
+            
+            if (EnrolledStudents.Contains(student))
+            {
+                Console.WriteLine("Студент уже записан на этот курс");
+                return false;
+            }
+
+            if (IsFull())
+            {
+                Console.WriteLine("Курс переполнен, невозможно добавить студента");
+                return false;
+            }
+
+            EnrolledStudents.Add(student);
+            return true;
+        }
+
+        public bool RemoveStudent(Student student)
+        {
+            if (student == null)
+                throw new ArgumentNullException(nameof(student), "Студент не может быть null");
+
+            if (!EnrolledStudents.Contains(student))
+            {
+                Console.WriteLine("Студент не записан на этот курс");
+                return false;
+            }
+
+            EnrolledStudents.Remove(student);
+            return true;
+        }
+
+        public void ViewEnrolledStudents()
+        {
+            if (EnrolledStudents.Count == 0)
+            {
+                Console.WriteLine("На курс не записан ни один студент");
+                return;
+            }
+
+            Console.WriteLine($"Студенты курса {CourseName}:");
+            foreach (var student in EnrolledStudents)
+            {
+                double courseAverage = 0;
+                if (student.Grades.ContainsKey(this))
+                {
+                    var grades = student.Grades[this];
+                    courseAverage = grades.Count > 0 ? grades.Average() : 0;
+                }
+                Console.WriteLine($"- {student.Name} (ID: {student.StudentId}, Средний балл: {courseAverage:F2})");
+            }
+        }
+
+        public bool IsFull()
+        {
+            return EnrolledStudents.Count >= MaxStudents;
+        }
+
+        public double GetCourseAverageGrade()
+        {
+            if (EnrolledStudents.Count == 0)
+                return 0;
+
+            double total = 0;
+            int count = 0;
+
+            foreach (var student in EnrolledStudents)
+            {
+                if (student.Grades.ContainsKey(this) && student.Grades[this].Count > 0)
+                {
+                    total += student.Grades[this].Average();
+                    count++;
+                }
+            }
+
+            return count > 0 ? total / count : 0;
+        }
     }
 
-    
     public class University
     {
         
     }
 
+    
     public class MenuManager
     {
         
     }
 
-    
     class Program
     {
         static void Main(string[] args)
