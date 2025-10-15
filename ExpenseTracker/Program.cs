@@ -456,7 +456,133 @@ namespace UniversityManagementSystem
 
     public class University
     {
-        
+        public List<Student> Students { get; private set; }
+        public List<Teacher> Teachers { get; private set; }
+        public List<Course> Courses { get; private set; }
+
+        public University()
+        {
+            Students = new List<Student>();
+            Teachers = new List<Teacher>();
+            Courses = new List<Course>();
+        }
+
+        public void AddStudent(Student student)
+        {
+            if (student == null)
+                throw new ArgumentNullException(nameof(student), "Студент не может быть null");
+
+            if (Students.Any(s => s.StudentId == student.StudentId))
+                throw new InvalidOperationException("Студент с таким ID уже существует");
+
+            Students.Add(student);
+            Console.WriteLine($"Студент {student.Name} добавлен в университет");
+        }
+
+        public void AddTeacher(Teacher teacher)
+        {
+            if (teacher == null)
+                throw new ArgumentNullException(nameof(teacher), "Преподаватель не может быть null");
+
+            if (Teachers.Any(t => t.TeacherId == teacher.TeacherId))
+                throw new InvalidOperationException("Преподаватель с таким ID уже существует");
+
+            Teachers.Add(teacher);
+            Console.WriteLine($"Преподаватель {teacher.Name} добавлен в университет");
+        }
+
+        public void AddCourse(Course course)
+        {
+            if (course == null)
+                throw new ArgumentNullException(nameof(course), "Курс не может быть null");
+
+            if (Courses.Any(c => c.CourseId == course.CourseId))
+                throw new InvalidOperationException("Курс с таким ID уже существует");
+
+            
+            Courses.Add(course);
+            Console.WriteLine($"Курс {course.CourseName} добавлен в университет");
+        }
+
+        public void DisplayAllStudents()
+        {
+            if (Students.Count == 0)
+            {
+                Console.WriteLine("В университете нет студентов");
+                return;
+            }
+
+            Console.WriteLine("Все студенты университета:");
+            foreach (var student in Students.OrderBy(s => s.StudentId))
+            {
+                student.DisplayInfo();
+                Console.WriteLine("---");
+            }
+        }
+
+        public void DisplayAllTeachers()
+        {
+            if (Teachers.Count == 0)
+            {
+                Console.WriteLine("В университете нет преподавателей");
+                return;
+            }
+
+            Console.WriteLine("Все преподаватели университета:");
+            foreach (var teacher in Teachers.OrderBy(t => t.TeacherId))
+            {
+                teacher.DisplayInfo();
+                Console.WriteLine("---");
+            }
+        }
+
+        public void DisplayAllCourses()
+        {
+            if (Courses.Count == 0)
+            {
+                Console.WriteLine("В университете нет курсов");
+                return;
+            }
+
+            Console.WriteLine("Все курсы университета:");
+            foreach (var course in Courses.OrderBy(c => c.CourseId))
+            {
+                course.DisplayCourseInfo();
+                Console.WriteLine("---");
+            }
+        }
+
+        public Student FindStudentById(int studentId)
+        {
+            return Students.FirstOrDefault(s => s.StudentId == studentId);
+        }
+
+        public Teacher FindTeacherById(int teacherId)
+        {
+            return Teachers.FirstOrDefault(t => t.TeacherId == teacherId);
+        }
+
+        public Course FindCourseById(int courseId)
+        {
+            return Courses.FirstOrDefault(c => c.CourseId == courseId);
+        }
+
+        public List<Student> GetTopStudents(int count = 5)
+        {
+            return Students
+                .Where(s => s.Courses.Count > 0)
+                .OrderByDescending(s => s.AverageGrade)
+                .Take(count)
+                .ToList();
+        }
+
+        public List<Course> GetMostPopularCourses(int count = 5)
+        {
+            return Courses
+                .OrderByDescending(c => c.EnrolledStudents.Count)
+                .Take(count)
+                .ToList();
+        }
     }
 
     
@@ -465,6 +591,7 @@ namespace UniversityManagementSystem
         
     }
 
+    // Главный класс программы
     class Program
     {
         static void Main(string[] args)
