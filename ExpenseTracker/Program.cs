@@ -73,3 +73,9 @@ namespace UniversityManagementSystem
     }
 
     
+    public class Teacher : Person
+    {
+        
+    }
+
+    
