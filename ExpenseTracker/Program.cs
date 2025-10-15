@@ -213,14 +213,106 @@ namespace UniversityManagementSystem
 
     public class Teacher : Person
     {
-        
+        private static int nextTeacherId = 1;
+
+        public int TeacherId { get; private set; }
+        public Department Department { get; private set; }
+        public List<Course> TeachingCourses { get; private set; }
+
+        public Teacher(string name, int age, string contactInfo, Department department)
+            : base(name, age, contactInfo)
+        {
+            TeacherId = nextTeacherId++;
+            Department = department;
+            TeachingCourses = new List<Course>();
+        }
+
+        public override void DisplayInfo()
+        {
+            Console.WriteLine($"Преподаватель ID: {TeacherId}");
+            Console.WriteLine($"Имя: {Name}");
+            Console.WriteLine($"Возраст: {Age}");
+            Console.WriteLine($"Контактная информация: {ContactInfo}");
+            Console.WriteLine($"Отдел: {Department}");
+            Console.WriteLine($"Количество преподаваемых курсов: {TeachingCourses.Count}");
+        }
+
+        public void AddCourse(Course course)
+        {
+            if (course == null)
+                throw new ArgumentNullException(nameof(course), "Курс не может быть null");
+
+            if (TeachingCourses.Contains(course))
+            {
+                Console.WriteLine("Преподаватель уже ведет этот курс");
+                return;
+            }
+
+            course.Instructor = this;
+            TeachingCourses.Add(course);
+            Console.WriteLine($"Преподаватель {Name} назначен на курс {course.CourseName}");
+        }
+
+        public void RemoveCourse(Course course)
+        {
+            if (course == null)
+                throw new ArgumentNullException(nameof(course), "Курс не может быть null");
+
+            
+            if (!TeachingCourses.Contains(course))
+            {
+                Console.WriteLine("Преподаватель не ведет этот курс");
+                return;
+            }
+
+            if (course.Instructor == this)
+                course.Instructor = null;
+
+            TeachingCourses.Remove(course);
+            Console.WriteLine($"Преподаватель {Name} удален с курса {course.CourseName}");
+        }
+
+        public void GradeStudent(Student student, Course course, double grade)
+        {
+            if (student == null)
+                throw new ArgumentNullException(nameof(student), "Студент не может быть null");
+
+            if (course == null)
+                throw new ArgumentNullException(nameof(course), "Курс не может быть null");
+
+            if (!TeachingCourses.Contains(course))
+                throw new InvalidOperationException("Преподаватель не ведет этот курс");
+
+            if (!course.EnrolledStudents.Contains(student))
+                throw new InvalidOperationException("Студент не записан на этот курс");
+
+            student.AddGrade(course, grade);
+            Console.WriteLine($"Оценка {grade} выставлена студенту {student.Name} по курсу {course.CourseName}");
+        }
+
+        public void ViewTeachingCourses()
+        {
+            if (TeachingCourses.Count == 0)
+            {
+                Console.WriteLine("Преподаватель не ведет ни одного курса");
+                return;
+            }
+
+            Console.WriteLine($"Курсы преподавателя {Name}:");
+            foreach (var course in TeachingCourses)
+            {
+                Console.WriteLine($"- {course.CourseName} (Студентов: {course.EnrolledStudents.Count}/{course.MaxStudents})");
+            }
+        }
     }
 
+    
     public class Course
     {
         
     }
 
+    
     public class University
     {
         
@@ -228,7 +320,6 @@ namespace UniversityManagementSystem
 
     public class MenuManager
     {
-        
         
     }
 
