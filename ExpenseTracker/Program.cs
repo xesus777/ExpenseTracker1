@@ -96,28 +96,5 @@ namespace UniversityManagementSystem
         
     }
 
-    // Главный класс программы
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-
-            try
-            {
-                Console.WriteLine("Запуск системы управления университетом...");
-
-                var menuManager = new MenuManager();
-                menuManager.DisplayMainMenu();
-
-                Console.WriteLine("Система завершена. До свидания!");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Критическая ошибка: {ex.Message}");
-                Console.WriteLine("Нажмите любую клавишу для выхода...");
-                Console.ReadKey();
-            }
-        }
-    }
+    
 }
