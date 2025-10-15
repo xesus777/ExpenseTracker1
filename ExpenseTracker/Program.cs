@@ -79,3 +79,9 @@ namespace UniversityManagementSystem
     }
 
     
+    public class Course
+    {
+        
+    }
+
+    
