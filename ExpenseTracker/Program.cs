@@ -67,3 +67,9 @@ namespace UniversityManagementSystem
     }
 
     
+    public class Student : Person
+    {
+        
+    }
+
+    
