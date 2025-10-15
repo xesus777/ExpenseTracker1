@@ -85,3 +85,9 @@ namespace UniversityManagementSystem
     }
 
     
+    public class University
+    {
+        
+    }
+
+    
