@@ -16,8 +16,7 @@ namespace UniversityManagementSystem
         Arts
     }
 
-    
-    public abstract class Person
+    public class Person
     {
         private string name;
         private int age;
@@ -56,17 +55,21 @@ namespace UniversityManagementSystem
             }
         }
 
-        protected Person(string name, int age, string contactInfo)
+        public Person(string name, int age, string contactInfo)
         {
             Name = name;
             Age = age;
             ContactInfo = contactInfo;
         }
 
-        public abstract void DisplayInfo();
+        public virtual void DisplayInfo()
+        {
+            Console.WriteLine($"Имя: {Name}");
+            Console.WriteLine($"Возраст: {Age}");
+            Console.WriteLine($"Контактная информация: {ContactInfo}");
+        }
     }
 
-    
     public class Student : Person
     {
         private static int nextStudentId = 1;
@@ -87,9 +90,7 @@ namespace UniversityManagementSystem
         public override void DisplayInfo()
         {
             Console.WriteLine($"Студент ID: {StudentId}");
-            Console.WriteLine($"Имя: {Name}");
-            Console.WriteLine($"Возраст: {Age}");
-            Console.WriteLine($"Контактная информация: {ContactInfo}");
+            base.DisplayInfo();
             Console.WriteLine($"Средний балл: {AverageGrade:F2}");
             Console.WriteLine($"Количество курсов: {Courses.Count}");
         }
@@ -139,7 +140,6 @@ namespace UniversityManagementSystem
             return false;
         }
 
-        
         public void ViewCourses()
         {
             if (Courses.Count == 0)
@@ -230,9 +230,7 @@ namespace UniversityManagementSystem
         public override void DisplayInfo()
         {
             Console.WriteLine($"Преподаватель ID: {TeacherId}");
-            Console.WriteLine($"Имя: {Name}");
-            Console.WriteLine($"Возраст: {Age}");
-            Console.WriteLine($"Контактная информация: {ContactInfo}");
+            base.DisplayInfo();
             Console.WriteLine($"Отдел: {Department}");
             Console.WriteLine($"Количество преподаваемых курсов: {TeachingCourses.Count}");
         }
@@ -253,12 +251,12 @@ namespace UniversityManagementSystem
             Console.WriteLine($"Преподаватель {Name} назначен на курс {course.CourseName}");
         }
 
+
         public void RemoveCourse(Course course)
         {
             if (course == null)
                 throw new ArgumentNullException(nameof(course), "Курс не может быть null");
 
-            
             if (!TeachingCourses.Contains(course))
             {
                 Console.WriteLine("Преподаватель не ведет этот курс");
@@ -306,7 +304,6 @@ namespace UniversityManagementSystem
         }
     }
 
-    
     public class Course
     {
         private static int nextCourseId = 1;
@@ -370,12 +367,12 @@ namespace UniversityManagementSystem
             Console.WriteLine($"Заполненность: {(double)EnrolledStudents.Count / MaxStudents * 100:F1}%");
         }
 
+
         public bool AddStudent(Student student)
         {
             if (student == null)
                 throw new ArgumentNullException(nameof(student), "Студент не может быть null");
 
-            
             if (EnrolledStudents.Contains(student))
             {
                 Console.WriteLine("Студент уже записан на этот курс");
@@ -496,10 +493,10 @@ namespace UniversityManagementSystem
             if (course == null)
                 throw new ArgumentNullException(nameof(course), "Курс не может быть null");
 
-            if (Courses.Any(c => c.CourseId == course.CourseId))
+
+        if (Courses.Any(c => c.CourseId == course.CourseId))
                 throw new InvalidOperationException("Курс с таким ID уже существует");
 
-            
             Courses.Add(course);
             Console.WriteLine($"Курс {course.CourseName} добавлен в университет");
         }
@@ -585,7 +582,6 @@ namespace UniversityManagementSystem
         }
     }
 
-    
     public class MenuManager
     {
         private University university;
@@ -613,6 +609,7 @@ namespace UniversityManagementSystem
                 var course3 = new Course("Физика", "Общая физика", 20);
 
                 university.AddTeacher(teacher1);
+
                 university.AddTeacher(teacher2);
                 university.AddStudent(student1);
                 university.AddStudent(student2);
@@ -621,7 +618,6 @@ namespace UniversityManagementSystem
                 university.AddCourse(course2);
                 university.AddCourse(course3);
 
-                
                 teacher1.AddCourse(course1);
                 teacher2.AddCourse(course2);
                 teacher2.AddCourse(course3);
@@ -720,8 +716,6 @@ namespace UniversityManagementSystem
                         break;
                     case "4":
                         ViewStudentCourses();
-
-                        
                         break;
                     case "5":
                         ViewStudentGrades();
@@ -823,6 +817,7 @@ namespace UniversityManagementSystem
             Console.Clear();
             Console.WriteLine("=== ЗАПИСЬ НА КУРСЫ ===");
 
+
             try
             {
                 Console.Write("Введите ID студента: ");
@@ -841,7 +836,6 @@ namespace UniversityManagementSystem
                     return;
                 }
 
-                
                 Console.Write("Введите ID курса: ");
                 if (!int.TryParse(Console.ReadLine(), out int courseId))
                 {
@@ -917,7 +911,6 @@ namespace UniversityManagementSystem
             WaitForKey();
         }
 
-        
         private void AddStudent()
         {
             try
@@ -945,6 +938,7 @@ namespace UniversityManagementSystem
             WaitForKey();
         }
 
+
         private void AddTeacher()
         {
             try
@@ -962,7 +956,6 @@ namespace UniversityManagementSystem
                 Console.Write("Введите контактную информацию: ");
                 string contactInfo = Console.ReadLine();
 
-                
                 Console.WriteLine("Выберите отдел:");
                 foreach (var dept in Enum.GetValues(typeof(Department)))
                 {
@@ -1012,7 +1005,6 @@ namespace UniversityManagementSystem
             WaitForKey();
         }
 
-        
         private void FindStudentById()
         {
             Console.Write("Введите ID студента: ");
@@ -1066,7 +1058,6 @@ namespace UniversityManagementSystem
 
             WaitForKey();
         }
-
         private void ViewStudentCourses()
         {
             Console.Write("Введите ID студента: ");
@@ -1085,7 +1076,6 @@ namespace UniversityManagementSystem
             WaitForKey();
         }
 
-        
         private void ViewStudentGrades()
         {
             Console.Write("Введите ID студента: ");
@@ -1174,7 +1164,6 @@ namespace UniversityManagementSystem
         }
     }
 
-    
     class Program
     {
         static void Main(string[] args)
