@@ -110,7 +110,12 @@ namespace TextRoguelike
 
     public class Weapon : Item
     {
-        
+        public int AttackBonus { get; set; }
+
+        public Weapon()
+        {
+            Type = "Weapon";
+        }
     }
 
     public class Armor : Item
