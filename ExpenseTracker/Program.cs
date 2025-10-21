@@ -19,5 +19,10 @@ namespace TextRoguelike
         
     }
 
+    public class Weapon : Item
+    {
+        
+    }
+
     
 }
