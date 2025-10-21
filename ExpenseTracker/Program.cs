@@ -34,5 +34,10 @@ namespace TextRoguelike
         
     }
 
+    public class Chest
+    {
+        
+    }
+
     
 }
