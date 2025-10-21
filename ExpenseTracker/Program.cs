@@ -9,5 +9,10 @@ namespace TextRoguelike
         
     }
 
+    public class Enemy
+    {
+        
+    }
+
     
 }
