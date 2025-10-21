@@ -24,5 +24,10 @@ namespace TextRoguelike
         
     }
 
+    public class Armor : Item
+    {
+        
+    }
+
     
 }
