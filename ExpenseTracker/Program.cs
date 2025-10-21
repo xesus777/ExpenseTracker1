@@ -14,5 +14,10 @@ namespace TextRoguelike
         
     }
 
+    public class Item
+    {
+        
+    }
+
     
 }
