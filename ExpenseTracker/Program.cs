@@ -29,5 +29,10 @@ namespace TextRoguelike
         
     }
 
+    public class Potion : Item
+    {
+        
+    }
+
     
 }
