@@ -130,7 +130,12 @@ namespace TextRoguelike
 
     public class Potion : Item
     {
-        
+        public int HealAmount { get; set; }
+
+        public Potion()
+        {
+            Type = "Potion";
+        }
     }
 
     public class Chest
