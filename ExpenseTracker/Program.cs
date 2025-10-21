@@ -140,7 +140,12 @@ namespace TextRoguelike
 
     public class Chest
     {
-        
+        public Item Contents { get; set; }
+
+        public Item Open()
+        {
+            return Contents;
+        }
     }
 
     public class Game
