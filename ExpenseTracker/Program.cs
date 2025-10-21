@@ -39,5 +39,10 @@ namespace TextRoguelike
         
     }
 
+    public class Game
+    {
+        
+    }
+
     
 }
