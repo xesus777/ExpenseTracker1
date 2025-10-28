@@ -143,7 +143,20 @@ namespace _3ISIP323ZHDANOVICH
                 }
 
                 
+                if (balance <= 0)
+                {
+                    gameOver = true;
+                    Console.WriteLine("\n ИГРА ОКОНЧЕНА!");
+                    Console.WriteLine("У вас закончились деньги!");
+                    Console.WriteLine("Вы банкрот!");
+                }
+
                 
+                if (!gameOver)
+                {
+                    Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+                    Console.ReadKey();
+                }
             }
 
             Console.WriteLine($"\nИтоговый баланс: {balance} руб.");
