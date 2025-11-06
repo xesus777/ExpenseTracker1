@@ -502,7 +502,42 @@ namespace GMWOG_Marketplace
                 }
             }
 
-            
+            // Меню пользователя
+            private static void UserMenu()
+            {
+                while (currentUser != null)
+                {
+                    Console.WriteLine("\n=== ЛИЧНЫЙ КАБИНЕТ ===");
+                    Console.WriteLine("1. Просмотр товаров");
+                    Console.WriteLine("2. Корзина");
+                    Console.WriteLine("3. Мои заказы");
+                    Console.WriteLine("4. Выйти из аккаунта");
+                    Console.Write("Выберите действие: ");
+
+                    var choice = Console.ReadLine();
+                    switch (choice)
+                    {
+                        case "1":
+                            ViewProducts();
+                            break;
+                        case "2":
+                            ViewShoppingCart();
+                            break;
+                        case "3":
+                            ViewOrders();
+                            break;
+                        case "4":
+
+    currentUser = null;
+                            shoppingCart.Clear();
+                            Console.WriteLine("Вы вышли из аккаунта.");
+                            return;
+                        default:
+                            Console.WriteLine("Неверный выбор.");
+                            break;
+                    }
+                }
+            }
 
             
             }
