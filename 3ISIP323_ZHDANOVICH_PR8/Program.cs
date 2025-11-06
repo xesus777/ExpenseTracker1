@@ -452,7 +452,31 @@ namespace GMWOG_Marketplace
                 Console.WriteLine("Регистрация успешно завершена! Теперь вы можете войти в аккаунт.");
             }
 
-            
+            // Вход в аккаунт
+            private static void Login()
+            {
+                Console.WriteLine("\n=== ВХОД В АККАУНТ ===");
+                Console.Write("Имя пользователя: ");
+                var username = Console.ReadLine();
+                Console.Write("Пароль: ");
+                var password = Console.ReadLine();
+
+                var user = Core.Context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+                if (user != null)
+                {
+                    currentUser = user;
+                    Console.WriteLine($"Добро пожаловать, {username}!");
+
+                    
+                    LoadUserCart();
+
+                    UserMenu();
+                }
+                else
+                {
+                    Console.WriteLine("Неверное имя пользователя или пароль.");
+                }
+            }
 
             
 
