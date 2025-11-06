@@ -185,7 +185,73 @@ namespace GMWOG_Marketplace
                 }
             }
 
-            
+            // Покупка всех товаров
+            private static void PurchaseAll()
+            {
+                var cartItems = Core.Context.Cart
+                    .Where(c => c.UserId == currentUser.Id)
+                    .ToList();
+
+                if (!cartItems.Any())
+                {
+                    Console.WriteLine("Корзина пуста.");
+                    return;
+                }
+
+               
+                var pickupPoint = SelectPickupPoint();
+                if (pickupPoint == null) return;
+
+               
+                var order = new Orders
+                {
+                    UserId = currentUser.Id,
+                    PickupPointId = pickupPoint.Id,
+                    OrderStatus = "Pending",
+                    TotalAmount = 0
+                };
+
+                decimal total = 0;
+
+                
+                foreach (var cartItem in cartItems)
+                {
+                    var product = Core.Context.Products.Find(cartItem.ProductId);
+                    if (product != null && product.Quantity >= cartItem.Quantity)
+                    {
+                        var orderItem = new OrderItems
+                        {
+                            ProductId = cartItem.ProductId,
+                            Quantity = cartItem.Quantity,
+                            UnitPrice = product.Price
+                        };
+
+                        order.OrderItems.Add(orderItem);
+                        total += product.Price * cartItem.Quantity;
+
+                        
+                        product.Quantity -= cartItem.Quantity;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Товар {product?.Name} недоступен в нужном количестве.");
+                    }
+                }
+
+                order.TotalAmount = total;
+                Core.Context.Orders.Add(order);
+
+                
+                Core.Context.Cart.RemoveRange(cartItems);
+                Core.Context.SaveChanges();
+
+                Console.WriteLine($"\nЗаказ #{order.Id} успешно оформлен!");
+                Console.WriteLine($"Сумма заказа: {total:C}");
+                Console.WriteLine($"Пункт выдачи: {pickupPoint.Name}");
+                Console.WriteLine($"Адрес: {pickupPoint.Address}");
+
+                shoppingCart.Clear();
+            }
 
             
             }
