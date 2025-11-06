@@ -395,7 +395,62 @@ namespace GMWOG_Marketplace
                 return null;
             }
 
-           
+            // Регистрация пользователя
+            private static void Register()
+            {
+                Console.WriteLine("\n=== РЕГИСТРАЦИЯ ===");
+                Console.Write("Введите имя пользователя: ");
+                var username = Console.ReadLine();
+
+                if (Core.Context.Users.Any(u => u.Username == username))
+                {
+                    Console.WriteLine("Пользователь с таким именем уже существует.");
+                    return;
+                }
+
+                Console.Write("Введите email: ");
+                var email = Console.ReadLine();
+
+                if (Core.Context.Users.Any(u => u.Email == email))
+                {
+                    Console.WriteLine("Пользователь с таким email уже существует.");
+                    return;
+                }
+
+                
+                Console.Write("Введите пароль: ");
+                var password = Console.ReadLine();
+                Console.Write("Подтвердите пароль: ");
+                var confirmPassword = Console.ReadLine();
+
+                if (password != confirmPassword)
+                {
+                    Console.WriteLine("Пароли не совпадают.");
+                    return;
+                }
+
+                Console.Write("Введите полное имя: ");
+                var fullName = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(username) && string.IsNullOrWhiteSpace(password) && string.IsNullOrWhiteSpace(email))
+            {
+                    Console.WriteLine("Имя пользователя, email и пароль не могут быть пустыми.");
+                    return;
+                }
+
+                var newUser = new Users
+                {
+                    Username = username,
+                    Password = password, 
+                    Email = email,
+                    FullName = fullName
+                };
+
+                Core.Context.Users.Add(newUser);
+                Core.Context.SaveChanges();
+
+                Console.WriteLine("Регистрация успешно завершена! Теперь вы можете войти в аккаунт.");
+            }
 
             
 
