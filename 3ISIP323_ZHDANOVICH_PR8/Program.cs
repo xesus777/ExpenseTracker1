@@ -253,7 +253,121 @@ namespace GMWOG_Marketplace
                 shoppingCart.Clear();
             }
 
-            
+            // Покупка одного товара
+            private static void PurchaseSingle()
+            {
+                var cartItems = Core.Context.Cart
+                    .Where(c => c.UserId == currentUser.Id)
+                    .ToList();
+
+                if (!cartItems.Any())
+                {
+                    Console.WriteLine("Корзина пуста.");
+                    return;
+                }
+
+                for (int i = 0; i < cartItems.Count; i++)
+                {
+                    var cartItem = cartItems[i];
+                    var product = Core.Context.Products.Find(cartItem.ProductId);
+                    if (product != null)
+                    {
+                        Console.WriteLine($"{i + 1}. {product.Name} - {product.Price:C} x {cartItem.Quantity}");
+                    }
+                }
+
+                Console.Write("Введите номер товара для покупки: ");
+                if (int.TryParse(Console.ReadLine(), out int itemNumber) && itemNumber >= 1 && itemNumber <= cartItems.Count)
+                {
+                    var selectedCartItem = cartItems[itemNumber - 1];
+                    var product = Core.Context.Products.Find(selectedCartItem.ProductId);
+
+                    if (product == null || product.Quantity < selectedCartItem.Quantity)
+                    {
+                        Console.WriteLine("Товар недоступен в нужном количестве.");
+                        return;
+                    }
+
+                    var pickupPoint = SelectPickupPoint();
+                    if (pickupPoint == null) return;
+
+                    var order = new Orders
+                    {
+                        UserId = currentUser.Id,
+                        PickupPointId = pickupPoint.Id,
+                        OrderStatus = "Pending",
+                        TotalAmount = product.Price * selectedCartItem.Quantity
+                    };
+
+                    var orderItem = new OrderItems
+                    {
+                        ProductId = selectedCartItem.ProductId,
+                        Quantity = selectedCartItem.Quantity,
+                        UnitPrice = product.Price
+                    };
+
+                    order.OrderItems.Add(orderItem);
+
+                    
+                product.Quantity -= selectedCartItem.Quantity;
+
+                    Core.Context.Orders.Add(order);
+                    Core.Context.Cart.Remove(selectedCartItem);
+                    Core.Context.SaveChanges();
+
+                    Console.WriteLine($"\nЗаказ #{order.Id} успешно оформлен!");
+                    Console.WriteLine($"Товар: {product.Name}");
+                    Console.WriteLine($"Количество: {selectedCartItem.Quantity}");
+                    Console.WriteLine($"Сумма: {order.TotalAmount:C}");
+                    Console.WriteLine($"Пункт выдачи: {pickupPoint.Name}");
+
+                    shoppingCart.RemoveAll(p => p.Id == selectedCartItem.ProductId);
+                }
+                else
+                {
+                    Console.WriteLine("Неверный номер товара.");
+                }
+            }
+
+            private static void RemoveFromCart()
+            {
+                var cartItems = Core.Context.Cart
+                    .Where(c => c.UserId == currentUser.Id)
+                    .ToList();
+
+                if (!cartItems.Any())
+                {
+                    Console.WriteLine("Корзина пуста.");
+                    return;
+                }
+
+                for (int i = 0; i < cartItems.Count; i++)
+                {
+                    var cartItem = cartItems[i];
+                    var product = Core.Context.Products.Find(cartItem.ProductId);
+                    if (product != null)
+                    {
+                        Console.WriteLine($"{i + 1}. {product.Name} - {product.Price:C} x {cartItem.Quantity}");
+                    }
+                }
+
+                Console.Write("Введите номер товара для удаления: ");
+                if (int.TryParse(Console.ReadLine(), out int itemNumber) && itemNumber >= 1 && itemNumber <= cartItems.Count)
+                {
+                    var cartItem = cartItems[itemNumber - 1];
+                    Core.Context.Cart.Remove(cartItem);
+                    Core.Context.SaveChanges();
+
+                    var product = Core.Context.Products.Find(cartItem.ProductId);
+                    Console.WriteLine($"Товар '{product?.Name}' удален из корзины.");
+
+                    
+                    shoppingCart.RemoveAll(p => p.Id == cartItem.ProductId);
+                }
+                else
+                {
+                    Console.WriteLine("Неверный номер товара.");
+                }
             }
 
 
