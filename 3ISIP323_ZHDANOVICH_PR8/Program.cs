@@ -69,7 +69,49 @@ namespace GMWOG_Marketplace
                 }
             }
 
-            
+            // Добавление товара в корзину
+            private static void AddToCart()
+            {
+                Console.Write("Введите ID товара для добавления в корзину: ");
+                if (int.TryParse(Console.ReadLine(), out int productId))
+                {
+                    var product = Core.Context.Products.FirstOrDefault(p => p.Id == productId && p.IsActive == true && p.Quantity > 0);
+                    if (product != null)
+                    {
+                        var existingCartItem = Core.Context.Cart.FirstOrDefault(c => c.UserId == currentUser.Id && c.ProductId == productId);
+
+                        if (existingCartItem != null)
+                        {
+                            existingCartItem.Quantity += 1;
+
+    Console.WriteLine($"Количество товара '{product.Name}' в корзине увеличено!");
+                        }
+                        else
+                        {
+                            var cartItem = new Cart
+                            {
+                                UserId = currentUser.Id,
+                                ProductId = productId,
+                                Quantity = 1
+                            };
+                            Core.Context.Cart.Add(cartItem);
+                            Console.WriteLine($"Товар '{product.Name}' добавлен в корзину!");
+                        }
+
+                        Core.Context.SaveChanges();
+
+                        shoppingCart.Add(product);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Товар не найден или отсутствует в наличии.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Неверный формат ID.");
+                }
+            }
 
             
 
