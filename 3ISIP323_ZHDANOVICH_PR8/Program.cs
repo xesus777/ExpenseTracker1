@@ -113,7 +113,77 @@ namespace GMWOG_Marketplace
                 }
             }
 
-            
+            // Просмотр корзины
+            private static void ViewShoppingCart()
+            {
+                if (currentUser == null)
+                {
+                    Console.WriteLine("Для просмотра корзины необходимо войти в аккаунт.");
+                    return;
+                }
+
+                Console.WriteLine("\n=== КОРЗИНА ===");
+
+                var cartItems = Core.Context.Cart
+                    .Where(c => c.UserId == currentUser.Id)
+                    .ToList();
+
+                var productIds = cartItems.Select(c => c.ProductId).ToList();
+                var products = Core.Context.Products.Where(p => productIds.Contains(p.Id)).ToList();
+
+                if (!cartItems.Any() && shoppingCart.Count == 0)
+                {
+                    Console.WriteLine("Корзина пуста.");
+                    return;
+                }
+
+                shoppingCart.Clear();
+                decimal total = 0;
+                int itemNumber = 1;
+
+                foreach (var cartItem in cartItems)
+                {
+                    var product = products.FirstOrDefault(p => p.Id == cartItem.ProductId);
+                    if (product != null)
+                    {
+                        for (int i = 0; i < cartItem.Quantity; i++)
+                        {
+                            shoppingCart.Add(product);
+                        }
+
+                        Console.WriteLine($"{itemNumber}. {product.Name} - {product.Price:C} x {cartItem.Quantity}");
+                        total += product.Price * cartItem.Quantity;
+                        itemNumber++;
+                    }
+                }
+
+                Console.WriteLine($"\nОбщая сумма: {total:C}");
+
+                Console.WriteLine("\n1. Купить все товары");
+                Console.WriteLine("2. Купить отдельный товар");
+                Console.WriteLine("3. Удалить товар из корзины");
+                Console.WriteLine("4. Вернуться в главное меню");
+                Console.Write("Выберите действие: ");
+
+                var choice = Console.ReadLine();
+                switch (choice)
+                {
+                    case "1":
+                        PurchaseAll();
+                        break;
+                    case "2":
+                        PurchaseSingle();
+                        break;
+                    case "3":
+                        RemoveFromCart();
+                        break;
+                    case "4":
+                        return;
+                    default:
+                        Console.WriteLine("Неверный выбор.");
+                        break;
+                }
+            }
 
             
 
