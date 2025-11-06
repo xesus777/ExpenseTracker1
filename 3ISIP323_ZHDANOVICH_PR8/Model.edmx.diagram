@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8db80faf513c411f8b281953c49545b8" Name="Diagram1">
+        <EntityTypeShape EntityType="OnlineStoreModel.Cart" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OnlineStoreModel.OrderItems" Width="1.5" PointX="8.25" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OnlineStoreModel.Orders" Width="1.5" PointX="6" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="OnlineStoreModel.PickupPoints" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="OnlineStoreModel.Products" Width="1.5" PointX="0.75" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="OnlineStoreModel.sysdiagrams" Width="1.5" PointX="2.75" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="OnlineStoreModel.Users" Width="1.5" PointX="0.75" PointY="3.5" IsExpanded="true" />
+        <AssociationConnector Association="OnlineStoreModel.FK_Cart_Products" ManuallyRouted="false" />
+        <AssociationConnector Association="OnlineStoreModel.FK_Cart_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="OnlineStoreModel.FK_OrderItems_Orders" ManuallyRouted="false" />
+        <AssociationConnector Association="OnlineStoreModel.FK_OrderItems_Products" ManuallyRouted="false" />
+        <AssociationConnector Association="OnlineStoreModel.FK_Orders_PickupPoints" ManuallyRouted="false" />
+        <AssociationConnector Association="OnlineStoreModel.FK_Orders_Users" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
