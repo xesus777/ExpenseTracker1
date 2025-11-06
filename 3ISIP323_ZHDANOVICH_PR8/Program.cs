@@ -478,7 +478,29 @@ namespace GMWOG_Marketplace
                 }
             }
 
-            
+            // Загрузка корзины пользователя из БД
+            private static void LoadUserCart()
+            {
+                shoppingCart.Clear();
+                var cartItems = Core.Context.Cart
+                    .Where(c => c.UserId == currentUser.Id)
+                    .ToList();
+
+                var productIds = cartItems.Select(c => c.ProductId).ToList();
+                var products = Core.Context.Products.Where(p => productIds.Contains(p.Id)).ToList();
+
+                foreach (var cartItem in cartItems)
+                {
+                    var product = products.FirstOrDefault(p => p.Id == cartItem.ProductId);
+                    if (product != null)
+                    {
+                        for (int i = 0; i < cartItem.Quantity; i++)
+                        {
+                            shoppingCart.Add(product);
+                        }
+                    }
+                }
+            }
 
             
 
