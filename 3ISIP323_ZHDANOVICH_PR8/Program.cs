@@ -370,6 +370,30 @@ namespace GMWOG_Marketplace
                 }
             }
 
+            // Выбор пункта выдачи
+            private static PickupPoints SelectPickupPoint()
+            {
+                Console.WriteLine("\n=== ВЫБОР ПУНКТА ВЫДАЧИ ===");
+                var points = Core.Context.PickupPoints.ToList();
+
+                foreach (var point in points)
+                {
+                    Console.WriteLine($"{point.Id}. {point.Name} - {point.Address}");
+                }
+
+                Console.Write("Выберите пункт выдачи: ");
+                if (int.TryParse(Console.ReadLine(), out int pointId))
+                {
+                    var selectedPoint = points.FirstOrDefault(p => p.Id == pointId);
+                    if (selectedPoint != null)
+                    {
+                        return selectedPoint;
+                    }
+                }
+
+                Console.WriteLine("Неверный выбор пункта выдачи.");
+                return null;
+            }
 
             
 
