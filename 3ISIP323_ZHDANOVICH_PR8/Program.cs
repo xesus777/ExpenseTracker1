@@ -33,7 +33,27 @@ namespace GMWOG_Marketplace
 
                     var choice = Console.ReadLine();
 
-                    
+                    switch (choice)
+                    {
+                        case "1":
+                            ViewProducts();
+                            break;
+                        case "2":
+                            Register();
+                            break;
+                        case "3":
+                            Login();
+                            break;
+                        case "4":
+                            ViewShoppingCart();
+                            break;
+                        case "5":
+                            Console.WriteLine("Спасибо за использование GMWOGGG.MOWWONGG!");
+                            return;
+                        default:
+                            Console.WriteLine("Неверный выбор. Попробуйте снова.");
+                            break;
+                    }
                 }
             }
 
