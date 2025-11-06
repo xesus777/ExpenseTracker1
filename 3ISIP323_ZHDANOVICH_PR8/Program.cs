@@ -539,7 +539,69 @@ namespace GMWOG_Marketplace
                 }
             }
 
-            
+            // Просмотр заказов с сортировкой
+            private static void ViewOrders()
+            {
+                var orders = Core.Context.Orders
+                    .Where(o => o.UserId == currentUser.Id)
+                    .ToList();
+
+                if (!orders.Any())
+                {
+                    Console.WriteLine("У вас пока нет заказов.");
+                    return;
+                }
+
+                // Загружаем связанные данные
+                var orderIds = orders.Select(o => o.Id).ToList();
+                var orderItems = Core.Context.OrderItems.Where(oi => orderIds.Contains(oi.OrderId)).ToList();
+                var productIds = orderItems.Select(oi => oi.ProductId).ToList();
+                var products = Core.Context.Products.Where(p => productIds.Contains(p.Id)).ToList();
+                var pickupPoints = Core.Context.PickupPoints.ToList();
+
+                Console.WriteLine("\n=== МОИ ЗАКАЗЫ ===");
+                Console.WriteLine("1. Сортировка по дате (сначала новые)");
+                Console.WriteLine("2. Сортировка по дате (сначала старые)");
+                Console.Write("Выберите тип сортировки: ");
+
+                var sortedOrders = orders.ToList();
+
+                var sortChoice = Console.ReadLine();
+                if (sortChoice == "2")
+                {
+                    sortedOrders = sortedOrders.OrderBy(o => o.Id).ToList(); // Используем Id вместо OrderDate
+                }
+                else
+                {
+                    sortedOrders = sortedOrders.OrderByDescending(o => o.Id).ToList();
+                }
+
+                foreach (var order in sortedOrders)
+                {
+                    var pickupPoint = pickupPoints.FirstOrDefault(pp => pp.Id == order.PickupPointId);
+                    var items = orderItems.Where(oi => oi.OrderId == order.Id).ToList();
+
+                    Console.WriteLine($"\nЗаказ #{order.Id}");
+                    Console.WriteLine($"Статус: {order.OrderStatus}");
+                    if (pickupPoint != null)
+                    {
+                        Console.WriteLine($"Пункт выдачи: {pickupPoint.Name}");
+                        Console.WriteLine($"Адрес: {pickupPoint.Address}");
+                    }
+                    Console.WriteLine("Товары:");
+
+                    foreach (var orderItem in items)
+                    {
+                        var product = products.FirstOrDefault(p => p.Id == orderItem.ProductId);
+                        if (product != null)
+                        {
+                            Console.WriteLine($"  - {product.Name} - {orderItem.UnitPrice:C} x {orderItem.Quantity}");
+                        }
+                    }
+
+                    Console.WriteLine($"Общая сумма: {order.TotalAmount:C}");
+                    Console.WriteLine(new string('-', 40));
+                }
             }
         }
 }
